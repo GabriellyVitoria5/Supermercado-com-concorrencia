@@ -11,6 +11,8 @@ public class Caixa implements Runnable {
     private List<Cliente> filaClientes;
     private Semaphore semaforo;
     private static Object chaveTroco = new Object();
+    private Supermercado supermercado;
+    private Caixa proximoCaixa;
     
 
     public Caixa() {
@@ -18,9 +20,10 @@ public class Caixa implements Runnable {
         this.semaforo = new Semaphore(1);
     }
 
-    public Caixa(int id, int troco) {
+    public Caixa(int id, int troco, Supermercado supermercado) {
         this.id = id;
         this.troco = troco;
+        this.supermercado = supermercado;
         this.filaClientes = new ArrayList<>();
         this.semaforo = new Semaphore(1);
     }
@@ -44,7 +47,7 @@ public class Caixa implements Runnable {
     @Override
     public void run() {
         
-        while (true) {
+        while (supermercado.isSupermercadoAberto()) {
             
             //caixa vai executar seu trabalho enquanto houver clientes na fila 
             if (!filaClientes.isEmpty()) {
@@ -66,6 +69,7 @@ public class Caixa implements Runnable {
                         }
                         else{
                             //cixa precisa pedir troco emprestado para o caixa vizinho
+                            //System.out.println("Caixa " + id + " pede troco para o caixa " + ((id +1) % supermercado.getListaCaixas().size()));
                         }
                     }
                     
