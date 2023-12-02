@@ -22,6 +22,8 @@ public class Cliente{
     public boolean isPrecisaTroco() {
         return precisaTroco;
     }
+    
+    
 
     /*@Override
     public void run() {
@@ -34,4 +36,9 @@ public class Cliente{
         }
         System.out.println("Cliente " + id + " finalizou as compras.");
     }*/
+
+    @Override
+    public String toString() {
+        return "Cliente " + id;
+    }
 }

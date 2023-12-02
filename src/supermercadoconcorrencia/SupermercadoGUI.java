@@ -1,6 +1,7 @@
 package supermercadoconcorrencia;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import javax.swing.JOptionPane;
@@ -10,10 +11,12 @@ public class SupermercadoGUI extends javax.swing.JFrame {
     public static String corVermelho = "\u001B[31m";
     public static String corVerde = "\u001B[32m";
     public static String corAzul = "\u001B[34m";
-    
+    public static boolean inanicao = false;
+    public static boolean deadlock = false;
+
     public SupermercadoGUI() {
         initComponents();
-        
+
         /*
         String mensagem = "Sua mensagem aqui";
         String vermelho = "\u001B[31m";
@@ -21,7 +24,7 @@ public class SupermercadoGUI extends javax.swing.JFrame {
         System.out.println(vermelho + mensagem);
         System.out.println(azul + mensagem);
         System.out.println(corVerde + mensagem);
-        */
+         */
     }
 
     /**
@@ -50,7 +53,6 @@ public class SupermercadoGUI extends javax.swing.JFrame {
         cbInanicao = new javax.swing.JCheckBox();
         jLabel10 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        btnIniciar = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         txtQuantTroco = new javax.swing.JTextField();
@@ -63,6 +65,7 @@ public class SupermercadoGUI extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
+        btbIniciar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -121,13 +124,6 @@ public class SupermercadoGUI extends javax.swing.JFrame {
 
         jLabel12.setText("* Clientes não serão atentidos pelo caixa");
 
-        btnIniciar.setText("Iniciar");
-        btnIniciar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnIniciarActionPerformed(evt);
-            }
-        });
-
         jLabel13.setText("Quantidade de troco:");
 
         jLabel14.setText("Chance de precisar de troco");
@@ -155,6 +151,13 @@ public class SupermercadoGUI extends javax.swing.JFrame {
 
         jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel18.setText("Cliente:");
+
+        btbIniciar.setText("Iniciar");
+        btbIniciar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbIniciarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -229,12 +232,13 @@ public class SupermercadoGUI extends javax.swing.JFrame {
                                     .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel18))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(190, 190, 190)
-                                .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel18)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(139, 139, 139)
+                .addComponent(btbIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 467, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -258,8 +262,7 @@ public class SupermercadoGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbInanicao)
-                            .addComponent(jLabel12))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel12)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -295,20 +298,67 @@ public class SupermercadoGUI extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel14)
                             .addComponent(txtChanceTroco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16))
-                        .addGap(27, 27, 27)))
-                .addComponent(btnIniciar)
-                .addGap(28, 28, 28))
+                            .addComponent(jLabel16))))
+                .addGap(18, 18, 18)
+                .addComponent(btbIniciar)
+                .addContainerGap(37, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarActionPerformed
-        
+    /*public static void outraFuncao() {
+        System.out.println("Início da outra função");
+        // Lógica da outra função aqui
+        System.out.println("Fim da outra função");
+    }*/
+
+    private void cbDeadlockItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbDeadlockItemStateChanged
+
+    }//GEN-LAST:event_cbDeadlockItemStateChanged
+
+    private void cbInanicaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbInanicaoItemStateChanged
+
+    }//GEN-LAST:event_cbInanicaoItemStateChanged
+
+    private void cbDeadlockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbDeadlockMouseClicked
+        if (cbDeadlock.isSelected()) {
+            deadlock = true;
+            JOptionPane.showMessageDialog(this, "Deadlock ativado");
+            txtChanceTroco.setText("100");
+            txtQuantTroco.setText("1");
+            txtQuantCaixa.setText("3");
+            txtQuantClientes.setText("6");
+        } else {
+            deadlock = false;
+            JOptionPane.showMessageDialog(this, "Deadlock desativado");
+            txtChanceTroco.setText("10");
+            txtQuantCaixa.setText("5");
+            txtQuantClientes.setText("15");
+            txtTempoFuncionamento.setText("20");
+        }
+    }//GEN-LAST:event_cbDeadlockMouseClicked
+
+    private void cbInanicaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbInanicaoMouseClicked
+        if (cbInanicao.isSelected()) {
+            inanicao = true;
+            JOptionPane.showMessageDialog(this, "Inanição ativada");
+            txtQuantCaixa.setText("3");
+            txtQuantClientes.setText("100");
+            txtTempoFuncionamento.setText("10");
+        } else {
+            inanicao = true;
+            JOptionPane.showMessageDialog(this, "Inanição desativada");
+            txtQuantCaixa.setText("5");
+            txtQuantClientes.setText("15");
+            txtTempoFuncionamento.setText("20");
+        }
+    }//GEN-LAST:event_cbInanicaoMouseClicked
+
+    private void btbIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbIniciarActionPerformed
         //validar valores informados
         int quantCaixas = 0, quantClientes = 0, tempoFuncionamento = 0, quantTroco = 0, chancePrecisarTroco = 0, tempoCompra = 0;
-        
+
         try {
             quantCaixas = Integer.parseInt(txtQuantCaixa.getText().trim());
             quantClientes = Integer.parseInt(txtQuantClientes.getText().trim());
@@ -320,116 +370,117 @@ public class SupermercadoGUI extends javax.swing.JFrame {
         catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Um ou mais campos inválidos! Verifique se todos possuem valor númerico");
         }
-        
-        if((quantCaixas < 1 || quantCaixas > 15) || (quantClientes < 0) || (tempoFuncionamento < 0) || (quantTroco < 0) || (chancePrecisarTroco < 0 || quantCaixas > 100) || tempoCompra < 0){
+
+        if ((quantCaixas < 1 || quantCaixas > 15) || (quantClientes < 0) || (tempoFuncionamento < 0) || (quantTroco < 0) || (chancePrecisarTroco < 0 || quantCaixas > 100) || tempoCompra < 0) {
             JOptionPane.showMessageDialog(null, "Um ou mais campos com valores inválidos! Verifique se todos possuem campos numéricos de acordo com os requisitos.");
-        }
-        else{
+        } 
+        else {
             //iniciar aplicação
-            System.out.println("---------- Supermercado abriu ----------\n");
-            
+            System.out.println("\n---------- Supermercado abriu ----------\n");
+
             Supermercado supermercado = new Supermercado(tempoFuncionamento);
-            
+
             //inicializar arrays para guardar os caixas
             List<Thread> threadsCaixa = new ArrayList<>();
             List<Caixa> listaCaixas = new ArrayList<>();
-            
+            List<Cliente> listaClientes = new ArrayList<>();
+
             //criar e dar start nos caixas
             for (int i = 0; i < quantCaixas; i++) {
                 Caixa caixa = new Caixa(i, quantTroco, supermercado);
                 Thread threadCaixa = new Thread(caixa);
                 threadsCaixa.add(threadCaixa);
-                threadCaixa.start();
                 listaCaixas.add(caixa);
-                
+
+                threadCaixa.start();
                 System.out.println(corVerde + "Caixa " + caixa.getId() + " está aberto!");
             }
-            
+
             supermercado.setListaCaixas(listaCaixas);
-            //System.out.println(supermercado.getListaCaixas());
-            
+
             //criar clientes
             Random random = new Random();
             for (int i = 1; i <= quantClientes; i++) {
                 Cliente cliente = null;
-                
+
                 //double percentual = (chancePrecisarTroco/100);
                 //cliente = new Cliente(i, tempoCompra, random.nextDouble() < percentual); 
-                
                 int clienteTempocompra = random.nextInt(tempoCompra) + 1;
-                boolean clientePrecisaTroco = random.nextDouble() < (chancePrecisarTroco/100); //gerar um n° double pra transformar a chance de n° para boolean
-                cliente = new Cliente(i, clienteTempocompra, clientePrecisaTroco);  // mudar tempo de compra 
-                
-                //um cliente já entra na fila do caixa ao ser criado
-                int caixaEscolhido = random.nextInt(quantCaixas);
-                listaCaixas.get(caixaEscolhido).adicionarClienteNaFila(cliente);
+                boolean clientePrecisaTroco = random.nextDouble() < (chancePrecisarTroco / 100); //gerar um n° double pra transformar a chance de n° para boolean
+                cliente = new Cliente(i-1, clienteTempocompra, clientePrecisaTroco);  // mudar tempo de compra 
+
+                listaClientes.add(cliente); 
             }
             
+            //distribuir clientes nos caixas 
+            if(!inanicao){
+                //clietes são distribuídos proporcionalmente entre os caixas
+                int clientesPorCaixa = quantClientes / quantCaixas;
+                int clientesExtras = quantClientes % quantCaixas;
+                int indiceCliente = 0;
+                Collections.shuffle(listaClientes); 
+                
+                for (int i = 0; i < quantCaixas; i++) {
+                    int quantidadeClientesNoCaixa = clientesPorCaixa + (i < clientesExtras ? 1 : 0);
+                    
+                    for (int j = 0; j < quantidadeClientesNoCaixa; j++) {
+                        listaCaixas.get(i).adicionarClienteNaFila(listaClientes.get(0));
+                        listaClientes.remove(0);
+                    }
+                    
+                    /*List<Cliente> clientesDoCaixa = listaClientes.subList(indiceCliente, indiceCliente + quantidadeClientesNoCaixa);
+                    listaCaixas.get(i).setFilaClientes(clientesDoCaixa);
+                    
+                    indiceCliente += quantidadeClientesNoCaixa;*/
+                }
+            }
+            else{
+                //distribuir clientes aleatoriamente entre os caixas, isso pode fazer com que um caixa atenta muitos clientes enquanto outros fiquem vazios
+                for (int i = 0; i < quantClientes; i++) {
+                    int caixaEscolhido = random.nextInt(quantCaixas);
+                    listaCaixas.get(caixaEscolhido).adicionarClienteNaFila(listaClientes.get(i));
+                }
+            }
+
             //supermercado dorme de acordo com o tempo de funcionamento informado
             //OBS: as threads de caixa comtinuam funcionando mesmo com o a thread main dormindo
             try {
-                Thread.sleep(tempoFuncionamento*1000);
-            } catch (InterruptedException ex) {
+                Thread.sleep(tempoFuncionamento * 1000);
+                supermercado.fecharSupermercado();
+                System.out.println("\n---------- Supermercado fechou ----------");
+
+                for (Thread caixa : threadsCaixa) {
+                    //caixa.join();
+                }
+            } 
+            catch (InterruptedException ex) {
                 JOptionPane.showMessageDialog(null, "Erro no funcionamento do supermercado.");
             }
-            
-            System.out.println("\n---------- Supermercado fechou ----------\n");
-            
-            //interromper as threads após o tempo de simulação
-            for (Thread thread : threadsCaixa) {
-                thread.interrupt();
-            }
-            
+
             //mostrar se houve clientes que não foram atetidos na fila dor caixas
-            //.......
-        }
-    }//GEN-LAST:event_btnIniciarActionPerformed
+            int clientesNaoAtendidos = 0;
+            for (Caixa caixa : listaCaixas) {
+                List<Cliente> filaClientes = caixa.getFilaClientes();
+                if (!filaClientes.isEmpty()) {
+                    clientesNaoAtendidos++;
+                }
+            }
 
-    /*public static void outraFuncao() {
-        System.out.println("Início da outra função");
-        // Lógica da outra função aqui
-        System.out.println("Fim da outra função");
-    }*/
-    
-    private void cbDeadlockItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbDeadlockItemStateChanged
-        
-    }//GEN-LAST:event_cbDeadlockItemStateChanged
+            if (clientesNaoAtendidos == 0) {
+                System.out.println("\nTodos os clientes foram atendidos");
+            } 
+            else {
+                System.out.println("\nAlguns clientes não foram atendidos:");
+                for (Caixa ca : listaCaixas) {
+                    System.out.print("\nCaixa " + ca.getId() + ": ");
+                    for (int i = 0; i < ca.getFilaClientes().size(); i++) {
+                        System.out.print(ca.getFilaClientes().get(i) + ", ");
+                    }
+                }
+            }
 
-    private void cbInanicaoItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbInanicaoItemStateChanged
-        
-    }//GEN-LAST:event_cbInanicaoItemStateChanged
-
-    private void cbDeadlockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbDeadlockMouseClicked
-        if(cbDeadlock.isSelected()){
-            JOptionPane.showMessageDialog(this, "Deadlock ativado");
-            txtChanceTroco.setText("100");
-            txtQuantTroco.setText("1");
-            txtQuantCaixa.setText("3");
-            txtQuantClientes.setText("6");
         }
-        else{
-            JOptionPane.showMessageDialog(this, "Deadlock desativado");
-            txtChanceTroco.setText("10");
-            txtQuantCaixa.setText("5");
-            txtQuantClientes.setText("15");
-            txtTempoFuncionamento.setText("20");
-        }
-    }//GEN-LAST:event_cbDeadlockMouseClicked
-
-    private void cbInanicaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbInanicaoMouseClicked
-        if(cbInanicao.isSelected()){
-            JOptionPane.showMessageDialog(this, "Inanição ativada");
-            txtQuantCaixa.setText("3");
-            txtQuantClientes.setText("100");
-            txtTempoFuncionamento.setText("10");
-        }
-        else{
-            JOptionPane.showMessageDialog(this, "Inanição desativada");
-            txtQuantCaixa.setText("5");
-            txtQuantClientes.setText("15");
-            txtTempoFuncionamento.setText("20");
-        }
-    }//GEN-LAST:event_cbInanicaoMouseClicked
+    }//GEN-LAST:event_btbIniciarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -468,7 +519,7 @@ public class SupermercadoGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnIniciar;
+    private javax.swing.JButton btbIniciar;
     private javax.swing.JCheckBox cbDeadlock;
     private javax.swing.JCheckBox cbInanicao;
     private javax.swing.JLabel jLabel1;
