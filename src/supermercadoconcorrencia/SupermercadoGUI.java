@@ -8,9 +8,7 @@ import javax.swing.JOptionPane;
 
 public class SupermercadoGUI extends javax.swing.JFrame {
 
-    public static String corVermelho = "\u001B[31m";
-    public static String corVerde = "\u001B[32m";
-    public static String corAzul = "\u001B[34m";
+    
     public static boolean inanicao = false;
     public static boolean deadlock = false;
 
@@ -393,7 +391,7 @@ public class SupermercadoGUI extends javax.swing.JFrame {
                 listaCaixas.add(caixa);
 
                 threadCaixa.start();
-                System.out.println(corVerde + "Caixa " + caixa.getId() + " está aberto!");
+                System.out.println(CoresMensagens.corVerde + "Caixa " + caixa.getId() + " está aberto!");
             }
 
             supermercado.setListaCaixas(listaCaixas);

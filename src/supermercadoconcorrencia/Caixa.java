@@ -3,16 +3,21 @@ package supermercadoconcorrencia;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Caixa implements Runnable {
 
     private int id;
     private int troco;
     private List<Cliente> filaClientes;
-    private Semaphore semaforo;
+    private final Semaphore semaforo;
     private static Object chaveTroco = new Object();
+    //private Lock lockTroco = new ReentrantLock();
     private Supermercado supermercado;
-    private Caixa proximoCaixa;
+    private boolean temTroco = true;
     
 
     public Caixa() {
@@ -40,12 +45,12 @@ public class Caixa implements Runnable {
         return troco;
     }
 
-    public List<Cliente> getFilaClientes() {
-        return filaClientes;
+    public void setTroco(int troco) {
+        this.troco = troco;
     }
 
-    public void setFilaClientes(List<Cliente> filaClientes) {
-        this.filaClientes = filaClientes;
+    public List<Cliente> getFilaClientes() {
+        return filaClientes;
     }
     
     public int getIdProximoCaixa(){
@@ -56,7 +61,7 @@ public class Caixa implements Runnable {
     public void run() {
         Cliente clienteAtual = null; 
         
-        while (supermercado.isSupermercadoAberto()) { 
+        while (supermercado.isSupermercadoAberto() && temTroco) { 
             if (!filaClientes.isEmpty()) {
                 
                 //por convenção desse projeto, um caixa só consegue atender um cliente se ele possuir troco
@@ -83,14 +88,43 @@ public class Caixa implements Runnable {
                 }
                 else{
                     //caixa precisa pedir troco para o próximo caixa
-                    aguardarTroco(this);
+                    pedirTroco();
                 }
             }
         }
     }
 
-    public boolean conseguirTrocoEmprestado() {
-        return true;
+    public void pedirTroco() {
+        Caixa proximoCaixa = supermercado.getListaCaixas().get(getIdProximoCaixa());
+        System.out.println(CoresMensagens.corAmarelo + "Caixa " + id + " precisa de troco! Tentando pedir emprestado para o caixa " + proximoCaixa.getId() + ".");
+
+        synchronized (chaveTroco) {
+            // Seção crítica para a transferência de troco
+            synchronized (proximoCaixa.chaveTroco) {
+                if(proximoCaixa.getTroco() > 0){
+                    proximoCaixa.setTroco(proximoCaixa.getTroco()-1);
+                    this.troco ++;
+                    System.out.println(CoresMensagens.corAzul + "Caixa " + id + " recebeu troco do caixa " + proximoCaixa.getId() + ".");
+                }
+                else{
+                    if(!SupermercadoGUI.deadlock){
+                        //se caixa não conseguir pedir troco emprestado, o caixa é fechado
+                        System.out.println(CoresMensagens.corVermelho + "Caixa " + id + " não conseguiu troco emprestado. O caixa não consegue mais funcionar e será fechado.");
+                        temTroco = false;
+                    }
+                    else{
+                        //caixa não vai liberar o lock enquanto não conseguir o troco que precisa
+                        try {
+                            System.out.println(CoresMensagens.corAmarelo + "Caixa " + id + " está aguardando troco emprestado do caixa " + proximoCaixa.getId());
+                            chaveTroco.wait();
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Caixa.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    
+                }
+            }
+        }
     }
     
     //caixa atual não tem mais troco, precisa aguardar e pedir troco emprestado para o próximo caixa
