@@ -22,20 +22,6 @@ public class Cliente{
     public boolean isPrecisaTroco() {
         return precisaTroco;
     }
-    
-    
-
-    /*@Override
-    public void run() {
-        // Implementação da lógica do cliente fazendo compras no caixa
-        System.out.println("Cliente " + id + " está fazendo compras por " + tempoAtendimento + " segundos.");
-        try {
-            Thread.sleep(tempoAtendimento * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Cliente " + id + " finalizou as compras.");
-    }*/
 
     @Override
     public String toString() {

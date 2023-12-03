@@ -3,10 +3,6 @@ package supermercadoconcorrencia;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Caixa implements Runnable {
 
@@ -15,7 +11,6 @@ public class Caixa implements Runnable {
     private List<Cliente> filaClientes;
     private final Semaphore semaforo;
     private static Object chaveTroco = new Object();
-    //private Lock lockTroco = new ReentrantLock();
     private Supermercado supermercado;
     private boolean temTroco = true;
     
@@ -80,7 +75,7 @@ public class Caixa implements Runnable {
                         System.out.println("Caixa " + id + " terminou de atender o cliente " + clienteAtual.getId() + ".");
                     }
                     catch (InterruptedException e) {
-                        e.printStackTrace(); 
+                        System.out.println(CoresMensagens.corVermelho + "Erro no funcionamento do caixa!");
                     } 
                     finally {
                         semaforo.release(); //liberar o semáforo para que outro cliente seja atendido
@@ -109,7 +104,7 @@ public class Caixa implements Runnable {
                 else{
                     if(!SupermercadoGUI.deadlock){
                         //se caixa não conseguir pedir troco emprestado, o caixa é fechado
-                        System.out.println(CoresMensagens.corVermelho + "Caixa " + id + " não conseguiu troco emprestado. O caixa não consegue mais funcionar e será fechado.");
+                        System.out.println(CoresMensagens.corVermelho + "Caixa " + id + " não conseguiu troco emprestado. O caixa não consegue mais funcionar.");
                         temTroco = false;
                     }
                     else{
@@ -118,7 +113,7 @@ public class Caixa implements Runnable {
                             System.out.println(CoresMensagens.corAmarelo + "Caixa " + id + " está aguardando troco emprestado do caixa " + proximoCaixa.getId());
                             chaveTroco.wait();
                         } catch (InterruptedException ex) {
-                            Logger.getLogger(Caixa.class.getName()).log(Level.SEVERE, null, ex);
+                            System.err.println(CoresMensagens.corVermelho + "Erro no caixa " + id + " o pedir troco!");
                         }
                     }
                     
@@ -127,26 +122,8 @@ public class Caixa implements Runnable {
         }
     }
     
-    //caixa atual não tem mais troco, precisa aguardar e pedir troco emprestado para o próximo caixa
-    public void aguardarTroco(Caixa caixa) {
-        synchronized (chaveTroco) {
-            try {
-                chaveTroco.wait();
-            } catch (InterruptedException ex) {
-                System.err.println("Caixa " + caixa.getId() + " está aguardando, pois precisa de troco emprestado do caixa ao lado");
-            }
-        }
-    }
-
-    //caixa é acordado e volta a funcionar 
-    public static void voltarAoFuncionamento() {
-        synchronized (chaveTroco) {
-            chaveTroco.notifyAll();
-        }
-    }
-    
     @Override
     public String toString() {
-        return "Caixa{" + "id=" + id + ", filaClientes=" + filaClientes + '}';
+        return "Caixa " + id + ": " + filaClientes;
     }
 }

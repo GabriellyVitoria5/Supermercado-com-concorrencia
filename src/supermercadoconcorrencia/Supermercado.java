@@ -39,4 +39,14 @@ public class Supermercado {
     public void fecharSupermercado(){
         supermercadoAberto = false;
     }
+    
+    public Caixa encontrarCaixaPeloID(int id) {
+        for (Caixa c : listaCaixas) {
+            if (c.getId() == id) {
+                return c;
+            }
+        }
+        return null;
+    }
+
 }
