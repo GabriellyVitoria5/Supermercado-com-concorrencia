@@ -1,6 +1,5 @@
 package supermercadoconcorrencia;
 
-import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,6 +8,7 @@ import javax.swing.JOptionPane;
 
 public class SupermercadoGUI extends javax.swing.JFrame {
 
+    public static boolean violarExclusaoMutua = false;
     public static boolean inanicao = false;
     public static boolean deadlock = false;
 
@@ -55,6 +55,7 @@ public class SupermercadoGUI extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         btbIniciar = new javax.swing.JButton();
+        cbViolarExclusaoMutua = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,7 +80,7 @@ public class SupermercadoGUI extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("* Configurações adicionais:");
 
-        cbDeadlock.setText("Forçar DeadLock");
+        cbDeadlock.setText("Simular deadLock");
         cbDeadlock.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbDeadlockItemStateChanged(evt);
@@ -97,7 +98,7 @@ public class SupermercadoGUI extends javax.swing.JFrame {
 
         jLabel11.setText("* segundos");
 
-        cbInanicao.setText("Forçar inanição");
+        cbInanicao.setText("Simular inanição");
         cbInanicao.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 cbInanicaoItemStateChanged(evt);
@@ -109,9 +110,9 @@ public class SupermercadoGUI extends javax.swing.JFrame {
             }
         });
 
-        jLabel10.setText("* Implementar sistema de troco");
+        jLabel10.setText("* Caixa será bloqueado por outro caixa");
 
-        jLabel12.setText("* Clientes não serão atentidos pelo caixa");
+        jLabel12.setText("* Clientes não serão atentidos por um caixa");
 
         jLabel13.setText("Quantidade de troco:");
 
@@ -148,6 +149,18 @@ public class SupermercadoGUI extends javax.swing.JFrame {
             }
         });
 
+        cbViolarExclusaoMutua.setText("Violar exclusão mútua");
+        cbViolarExclusaoMutua.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbViolarExclusaoMutuaItemStateChanged(evt);
+            }
+        });
+        cbViolarExclusaoMutua.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cbViolarExclusaoMutuaMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -164,6 +177,14 @@ public class SupermercadoGUI extends javax.swing.JFrame {
                                 .addComponent(jLabel2))
                             .addComponent(jLabel1)
                             .addComponent(jLabel5)
+                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel18)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel14)
+                                .addGap(21, 21, 21)
+                                .addComponent(txtChanceTroco, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel16))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
@@ -189,7 +210,8 @@ public class SupermercadoGUI extends javax.swing.JFrame {
                                         .addGap(27, 27, 27)
                                         .addComponent(txtTempoFuncionamento, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel11)))
+                                        .addComponent(jLabel11))
+                                    .addComponent(jLabel4))
                                 .addGap(49, 49, 49)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
@@ -200,16 +222,8 @@ public class SupermercadoGUI extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel12)
-                                            .addComponent(jLabel10)))))
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel18)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel14)
-                                .addGap(21, 21, 21)
-                                .addComponent(txtChanceTroco, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel16)))
+                                            .addComponent(jLabel10)))
+                                    .addComponent(cbViolarExclusaoMutua))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
@@ -239,7 +253,9 @@ public class SupermercadoGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbInanicao)
-                            .addComponent(jLabel12)))
+                            .addComponent(jLabel12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbViolarExclusaoMutua))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -311,9 +327,11 @@ public class SupermercadoGUI extends javax.swing.JFrame {
         if (cbInanicao.isSelected()) {
             inanicao = true;
             JOptionPane.showMessageDialog(this, "Inanição ativada");
-            //txtQuantCaixa.setText("3");
-            //txtQuantClientes.setText("100");
-            //txtTempoFuncionamento.setText("10");
+            txtTempoFuncionamento.setText("15");
+            txtQuantCaixa.setText("5");
+            txtQuantTroco.setText("5");
+            txtQuantClientes.setText("20");
+            txtTempoCompra.setText("3");
         } else {
             inanicao = true;
             JOptionPane.showMessageDialog(this, "Inanição desativada");
@@ -446,6 +464,24 @@ public class SupermercadoGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btbIniciarActionPerformed
 
+    private void cbViolarExclusaoMutuaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbViolarExclusaoMutuaItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbViolarExclusaoMutuaItemStateChanged
+
+    private void cbViolarExclusaoMutuaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cbViolarExclusaoMutuaMouseClicked
+        if (cbViolarExclusaoMutua.isSelected()) {
+            violarExclusaoMutua = true;
+            JOptionPane.showMessageDialog(this, "Violar exclusão mútua ativada");
+            txtTempoFuncionamento.setText("5");
+            txtQuantCaixa.setText("1");
+            txtQuantClientes.setText("5");
+            txtTempoCompra.setText("3");
+        } else {
+            violarExclusaoMutua = false;
+            JOptionPane.showMessageDialog(this, "Violar exclusão mútua desativada");
+        }
+    }//GEN-LAST:event_cbViolarExclusaoMutuaMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -486,6 +522,7 @@ public class SupermercadoGUI extends javax.swing.JFrame {
     private javax.swing.JButton btbIniciar;
     private javax.swing.JCheckBox cbDeadlock;
     private javax.swing.JCheckBox cbInanicao;
+    private javax.swing.JCheckBox cbViolarExclusaoMutua;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
