@@ -67,7 +67,7 @@ public class Caixa implements Runnable {
                             //caixa vai atendender o primeiro cliente da fila
                             clienteAtual = filaClientes.remove(0);
 
-                            //semaforo.acquire(); //pedir permissão para acessar a próxima seção
+                            semaforo.acquire(); //pedir permissão para acessar a próxima seção
 
                             System.out.println("Caixa " + id + " está atendendo o cliente " + clienteAtual.getId() + " por " + clienteAtual.getTempoCompra() + " segundos");
                             Thread.sleep(clienteAtual.getTempoCompra()* 1000);
