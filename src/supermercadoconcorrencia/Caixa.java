@@ -62,12 +62,12 @@ public class Caixa implements Runnable {
                 //por convenção desse projeto, um caixa só consegue atender um cliente se ele possuir troco
                 if(troco > 0){
                     if(!SupermercadoGUI.violarExclusaoMutua){
-                        //garantir que apenas um cliente será atendido por vez
+                        //Seção crítica: garantir que apenas um cliente será atendido por vez
                         try{
                             //caixa vai atendender o primeiro cliente da fila
                             clienteAtual = filaClientes.remove(0);
 
-                            semaforo.acquire(); //pedir permissão para acessar a próxima seção
+                            //semaforo.acquire(); //pedir permissão para acessar a próxima seção
 
                             System.out.println("Caixa " + id + " está atendendo o cliente " + clienteAtual.getId() + " por " + clienteAtual.getTempoCompra() + " segundos");
                             Thread.sleep(clienteAtual.getTempoCompra()* 1000);
@@ -108,7 +108,6 @@ public class Caixa implements Runnable {
         if(!SupermercadoGUI.violarExclusaoMutua){
             //é preciso sincronizar o acesso à variável de troco do próximo caixa para evitar que ela seja alterada de forma incorreta durante a concorrência
             synchronized (chaveTroco) {
-                // Seção crítica para a transferência de troco
                 synchronized (proximoCaixa.chaveTroco) {
                     pedirTroco(proximoCaixa);
                 }
@@ -138,7 +137,7 @@ public class Caixa implements Runnable {
                     System.out.println(CoresMensagens.corAmarelo + "Caixa " + id + " está aguardando troco emprestado do caixa " + proximoCaixa.getId());
                     chaveTroco.wait();
                 } catch (InterruptedException ex) {
-                    System.err.println(CoresMensagens.corVermelho + "Erro no caixa " + id + " o pedir troco!");
+                    System.err.println(CoresMensagens.corVermelho + "Erro no caixa " + id + " ao pedir troco!");
                 }
             }
 
